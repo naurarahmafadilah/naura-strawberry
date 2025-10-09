@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'naura';
+    src: url('assets/fonts/Oswald.ttf');
+}
+
+.font-custom{
+    font-family: 'naura';
+}
