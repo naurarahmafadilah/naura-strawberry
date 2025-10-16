@@ -114,9 +114,10 @@
                         <span class="sidebar-text">Dashboard</span>
                     </a>
                 </li>
+
                 <!-- Tambahkan blok kode ini -->
                 <li class="nav-item  active ">
-                    <a href="" class="nav-link">
+                    <a href="{{route ('pelanggan.index')}}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" data-slot="icon" fill="none" stroke-width="1.5"
                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -155,6 +156,7 @@
                                 <path fill-rule="evenodd"
                                     d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
                                     clip-rule="evenodd"></path>
+
                             </svg>
                         </span>
                         <span>Upgrade to Pro</span>
@@ -168,14 +170,6 @@
 
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
             <div class="container-fluid px-0">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show w-100" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                            aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
                     <div class="d-flex align-items-center">
                         <!-- Search form -->
@@ -353,85 +347,85 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item"><a href="#">Pelanggan</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Pelanggan</li>
                 </ol>
             </nav>
             <div class="d-flex justify-content-between w-100 flex-wrap">
                 <div class="mb-3 mb-lg-0">
-                    <h1 class="h4">Data Pelanggan</h1>
-                    <p class="mb-0">List data seluruh pelanggan</p>
+                    <h1 class="h4">Edit Pelanggan</h1>
+                    <p class="mb-0">Form untuk edit data pelanggan.</p>
                 </div>
                 <div>
-                    <a href="{{ route('pelanggan.create') }}" class="btn btn-success text-white"><i
-                            class="far fa-question-circle me-1"></i>
-                        Tambah Pelanggan</a>
+                    <a href="{{route('pelanggan.index')}}" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 mb-4">
-                <div class="card border-0 shadow mb-4">
+                <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="table-pelanggan" class="table table-centered table-nowrap mb-0 rounded">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th class="border-0">First Name</th>
-                                        <th class="border-0">Last Name</th>
-                                        <th class="border-0">Birthday</th>
-                                        <th class="border-0">Gender</th>
-                                        <th class="border-0">Email</th>
-                                        <th class="border-0">Phone</th>
-                                        <th class="border-0 rounded-end">Action</th>
+                        <form action="{{route('pelanggan.update', $dataPelanggan->pelanggan_id)}}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="row mb-4">
+                                <div class="col-lg-4 col-sm-6">
+                                    <!-- First Name -->
+                                    <div class="mb-3">
+                                        <label for="first_name" class="form-label">First name</label>
+                                        <input type="text" name='first_name' id="first_name" class="form-control" required value="{{ $dataPelanggan->first_name }}">
+                                    </div>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
+                                    <!-- Last Name -->
+                                    <div class="mb-3">
+                                        <label for="last_name" class="form-label">Last name</label>
+                                        <input type="text" name='last_name' id="last_name" class="form-control" required value="{{ $dataPelanggan->last_name }}">
+                                    </div>
+                                </div>
 
-                                <tbody>
-                                    @foreach ($dataPelanggan as $item)
-                                        <tr>
-                                            <td>{{ $item->first_name }}</td>
-                                            <td>{{ $item->last_name }}</td>
-                                            <td>{{ $item->birthday }}</td>
-                                            <td>{{ $item->gender }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->phone }}</td>
-                                            <td><a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}"
-                                                    class="btn btn-info btn-sm">
-                                                    <svg class="icon icon-xs me-2" data-slot="icon" fill="none"
-                                                        stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10">
-                                                        </path>
-                                                    </svg>
-                                                    Edit
-                                                </a>
-                                                <form action="{{ route('pelanggan.destroy', $item->pelanggan_id) }}" method="POST" style="display:inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">
-                                                        <svg class="icon icon-xs me-2" data-slot="icon"
-                                                            fill="none" stroke-width="1.5" stroke="currentColor"
-                                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0">
-                                                            </path>
-                                                        </svg>
-                                                        Hapus
-                                                    </button>
-                                                </form>
-                                            </td>
+                                <div class="col-lg-4 col-sm-6">
+                                    <!-- Birthday -->
+                                    <div class="mb-3">
+                                        <label for="birthday" class="form-label">Birthday</label>
+                                        <input type="date" name='birthday' id="birthday" class="form-control" value="{{ $dataPelanggan->birthday }}">
+                                    </div>
 
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                </tbody>
-                            </table>
-                        </div>
+                                    <!-- Gender -->
+                                    <div class="mb-3">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select id="gender" name="gender" class="form-select">
+                                            <option selected="">-- Pilih --</option>
+                                            <option value="Pria" {{ $dataPelanggan->gender == 'Pria' ? 'selected' : ''}} >Pria</option>
+                                            <option value="Wanita" {{ $dataPelanggan->gender == 'Wanita' ? 'selected' : ''}} >Wanita</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-sm-12">
+                                    <!-- Email -->
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="text" name='email' id="email" class="form-control" required value="{{ $dataPelanggan->email }}">
+                                    </div>
+
+                                    <!-- Phone -->
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="text" name='phone' id="phone" class="form-control" value="{{ $dataPelanggan->phone }}">
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <div class="">
+                                        <button type="submit" class="btn btn-primary"> Simpan Perubahan</button>
+                                        <a href="{{ route('pelanggan.index') }}"
+                                            class="btn btn-outline-secondary ms-2">Batal</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -459,6 +453,7 @@
                             <a href="https://themesberg.com/contact">Contact</a>
                         </li>
                     </ul>
+
                 </div>
             </div>
         </footer>
