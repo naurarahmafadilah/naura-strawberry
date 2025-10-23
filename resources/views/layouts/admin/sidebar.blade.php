@@ -71,7 +71,8 @@
                 </li>
                 <!-- Tambahkan blok kode ini -->
                 <li class="nav-item  {{ request()->routeIs('pelanggan.*') ? 'active' : '' }}">
-                    <a href="{{route('pelanggan.index')}}" class="nav-link">
+                    <a href="{{route
+                    ('pelanggan.index')}}" class="nav-link">
                         <span class="sidebar-icon">
                             <svg class="icon icon-xs me-2" data-slot="icon" fill="none" stroke-width="1.5"
                                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
