@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -11,7 +11,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('admin.user.create');
+        $data['dataUser'] = User::all();
+        return view('admin.user.index', $data);
     }
 
     /**
@@ -19,7 +20,7 @@ class UserController extends Controller
      */
     public function create()
     {
-
+        return view('admin.user.create');
     }
 
     /**
@@ -28,8 +29,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-    }
+        $data['name']     = $request->name;
+        $data['email']    = $request->email;
+        $data['password'] = $request->password;
 
+        User::create($data);
+
+        return redirect()->route('user.index')->with('create', 'Penambahan Data Berhasil!');
+    }
 
     /**
      * Display the specified resource.
@@ -50,17 +57,17 @@ class UserController extends Controller
 /**
  * Update the specified resource in storage.
  */
-public function update(Request $request, string $id)
-{
+    public function update(Request $request, string $id)
+    {
 
-}
+    }
 
 /**
  * Remove the specified resource from storage.
  */
-public function destroy(string $id)
-{
+    public function destroy(string $id)
+    {
 
-}
+    }
 
 }

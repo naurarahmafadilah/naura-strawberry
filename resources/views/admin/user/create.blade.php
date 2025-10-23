@@ -22,11 +22,11 @@
             </nav>
             <div class="d-flex justify-content-between w-100 flex-wrap">
                 <div class="mb-3 mb-lg-0">
-                    <h1 class="h4">Tambah Pelanggan</h1>
-                    <p class="mb-0">Form untuk menambahkan data pelanggan baru.</p>
+                    <h1 class="h4">Tambah User</h1>
+                    <p class="mb-0">Form untuk menambahkan user baru.</p>
                 </div>
                 <div>
-                    <a href="{{route('pelanggan.index')}}" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
+                    <a href="{{route('user.index')}}" class="btn btn-primary"><i class="far fa-question-circle me-1"></i> Kembali</a>
                 </div>
             </div>
         </div>
@@ -35,20 +35,20 @@
             <div class="col-12 mb-4">
                 <div class="card border-0 shadow components-section">
                     <div class="card-body">
-                        <form action="{{route ('pelanggan.store')}}" method="POST">
+                        <form action="{{route ('user.store')}}" method="POST">
                             @csrf
                             <div class="row mb-4">
                                 <div class="col-lg-4 col-sm-6">
                                     <!-- Nama Lengkap -->
                                     <div class="mb-3">
-                                        <label for="first_name" class="form-label">Nama Lengkap</label>
+                                        <label for="name" class="form-label">Nama Lengkap</label>
                                         <input type="text" name='name' id="name" class="form-control" required>
                                     </div>
 
                                     <!-- Email -->
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="text" name='email' id="email" class="form-control" required>
+                                        <input type="email" name='email' id="email" class="form-control" required>
                                     </div>
                                 </div>
 
@@ -62,13 +62,13 @@
                                     <!-- Password Comfirm -->
                                     <div class="mb-3">
                                         <label for="password_confirmation" class="form-label">Password_confirmation</label>
-                                        <input type="password" name='password' id="password" class="form-control">
+                                        <input type="password" name='password_confirmation' id="password_confirmation" class="form-control">
                                     </div>
 
                                     <!-- Buttons -->
                                     <div class="">
                                         <button type="submit" class="btn btn-primary">Simpan</button>
-                                        <a href="{{ route('pelanggan.index') }}"
+                                        <a href="{{ route('user.index') }}"
                                             class="btn btn-outline-secondary ms-2">Batal</a>
                                     </div>
                                 </div>
