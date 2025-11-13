@@ -39,7 +39,7 @@
                         <table id="table-user" class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">Name</th>
+                                    <th class="border-0">Name Lengkap</th>
                                     <th class="border-0">Email</th>
                                     <th class="border-0">Password</th>
                                     <th class="border-0 rounded-end">Action</th>
