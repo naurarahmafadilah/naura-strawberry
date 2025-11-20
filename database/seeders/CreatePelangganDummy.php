@@ -1,0 +1,29 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Faker\Factory;
+use Illuminate\Support\Facades\DB;
+
+class CreatePelangganDummy extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(){
+    $faker = \Faker\Factory::create();
+
+    foreach (range(1, 1000) as $index) {
+        DB::table('pelanggan')->insert([
+            'first_name' => $faker->firstName,
+            'last_name'  => $faker->lastName,
+            'birthday'   => $faker->date('Y-m-d', '2005-12-31'),
+            'gender'     => $faker->randomElement(['Pria', 'Wanita', 'Lainnya']),
+            'email'      => $faker->unique()->safeEmail,
+            'phone'      => $faker->phoneNumber,
+        ]);
+    }
+}
+}
