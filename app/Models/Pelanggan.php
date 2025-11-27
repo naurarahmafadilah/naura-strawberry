@@ -37,4 +37,10 @@ class Pelanggan extends Model
             });
         }
     }
+
+    public function files()
+    {
+        return $this->hasMany(PelangganFile::class, 'pelanggan_id');
+    }
+
 }

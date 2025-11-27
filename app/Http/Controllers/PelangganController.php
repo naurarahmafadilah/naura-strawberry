@@ -1,95 +1,124 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
+use App\Models\PelangganFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PelangganController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $filterableColumns     = ['gender'];
         $searchableColumns     = ['first_name'];
         $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)
             ->search($request, $searchableColumns)
-            ->Paginate(10)
+            ->paginate(10)
             ->onEachSide(2);
         return view('admin.pelanggan.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.pelanggan.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //dd($request->all());
-
-        $data['first_name'] = $request->first_name;
-        $data['last_name']  = $request->last_name;
-        $data['birthday']   = $request->birthday;
-        $data['gender']     = $request->gender;
-        $data['email']      = $request->email;
-        $data['phone']      = $request->phone;
-
-        Pelanggan::create($data);
+        $pelanggan = Pelanggan::create([
+            'first_name' => $request->first_name,
+            'last_name'  => $request->last_name,
+            'birthday'   => $request->birthday,
+            'gender'     => $request->gender,
+            'email'      => $request->email,
+            'phone'      => $request->phone,
+        ]);
 
         return redirect()->route('pelanggan.index')->with('create', 'Penambahan Data Berhasil!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
+        $pelanggan = Pelanggan::with('files')->findOrFail($id);
+        return view('admin.pelanggan.show', compact('pelanggan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        $data['dataPelanggan'] = Pelanggan::findOrFail($id);
+        $data['dataPelanggan'] = Pelanggan::with('files')->findOrFail($id);
         return view('admin.pelanggan.edit', $data);
     }
 
-/**
- * Update the specified resource in storage.
- */
     public function update(Request $request, string $id)
     {
-        $pelanggan_id = $id;
-        $pelanggan    = Pelanggan::findOrFail($pelanggan_id);
+        $pelanggan = Pelanggan::findOrFail($id);
 
-        $pelanggan->first_name = $request->first_name;
-        $pelanggan->last_name  = $request->last_name;
-        $pelanggan->birthday   = $request->birthday;
-        $pelanggan->gender     = $request->gender;
-        $pelanggan->email      = $request->email;
-        $pelanggan->phone      = $request->phone;
+        $request->validate([
+            'first_name' => 'required',
+            'last_name'  => 'required',
+            'birthday'   => 'nullable|date',
+            'gender'     => 'nullable',
+            'email'      => 'required|email',
+            'phone'      => 'nullable',
+            'files.*'    => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-        $pelanggan->save();
-        return redirect()->route('pelanggan.index')->with('update', 'Perubahan Data Berhasil!');
+        // UPDATE DATA TEXT
+        $pelanggan->update([
+            'first_name' => $request->first_name,
+            'last_name'  => $request->last_name,
+            'birthday'   => $request->birthday,
+            'gender'     => $request->gender,
+            'email'      => $request->email,
+            'phone'      => $request->phone,
+        ]);
+
+        // UPLOAD MULTIPLE FILES
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+
+                $path = $file->store('pelanggan_files', 'public');
+
+                PelangganFile::create([
+                    'pelanggan_id' => $pelanggan->pelanggan_id,
+                    'file_path'    => $path,
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('pelanggan.show', $pelanggan->pelanggan_id)
+            ->with('update', 'Perubahan Data Berhasil!');
     }
 
-/**
- * Remove the specified resource from storage.
- */
     public function destroy(string $id)
     {
         $pelanggan = Pelanggan::findOrFail($id);
 
-        return redirect()->route('pelanggan.index')->with('Delete', 'Data berhasil di hapus!');
+        // HAPUS FILE DARI STORAGE
+        foreach ($pelanggan->files as $file) {
+            Storage::disk('public')->delete($file->file_path);
+        }
+
+        // HAPUS DATA FILE
+        $pelanggan->files()->delete();
+
+        // HAPUS PELANGGAN
+        $pelanggan->delete();
+
+        return redirect()->route('pelanggan.index')->with('Delete', 'Data berhasil dihapus!');
+    }
+
+    public function destroyFile($id)
+    {
+        $file = PelangganFile::findOrFail($id);
+
+        Storage::disk('public')->delete($file->file_path);
+
+        $file->delete();
+
+        return back()->with('success', 'File berhasil dihapus!');
     }
 }
