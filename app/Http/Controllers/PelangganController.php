@@ -1,16 +1,22 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use App\Models\PelangganFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PelangganController extends Controller
 {
     public function index(Request $request)
     {
+
+        if (! Auth::check()) {
+            //Redirect ke halaman login
+            return redirect()->route('auth')->withErrors('Silahkan login terlebih dahulu!');
+        }
+
         $filterableColumns     = ['gender'];
         $searchableColumns     = ['first_name'];
         $data['dataPelanggan'] = Pelanggan::filter($request, $filterableColumns)
@@ -22,6 +28,10 @@ class PelangganController extends Controller
 
     public function create()
     {
+        if (! Auth::check()) {
+            //Redirect ke halaman login
+            return redirect()->route('auth')->withErrors('Silahkan login terlebih dahulu!');
+        }
         return view('admin.pelanggan.create');
     }
 
